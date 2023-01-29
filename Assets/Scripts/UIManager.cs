@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +20,7 @@ public class UIManager : MonoBehaviour
         newVideoAmount += 10;
         newVideoText.text = "VIDEO: " + newVideoAmount;
 
-        if (UploadNewVideoAction != null)
-            UploadNewVideoAction();
+        UploadNewVideoAction?.Invoke();
     }
 
     public void GetSubscriberUI()
@@ -27,8 +28,6 @@ public class UIManager : MonoBehaviour
         subscriberAmount += 10;
         subscriberText.text = "SUBSCRIBER: " + subscriberAmount;
 
-        if (GetNewSubscriberAction != null)
-            GetNewSubscriberAction();
+        GetNewSubscriberAction?.Invoke();
     }
 }
-

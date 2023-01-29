@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,23 +16,30 @@ public class AchievementSystem : MonoBehaviour
     private int _videoAmount;
     private int _subscriberAmount;
 
-    private void Start()
+    private void OnEnable()
     {
         FindObjectOfType<UIManager>().UploadNewVideoAction += UploadNewVideo;
         FindObjectOfType<UIManager>().GetNewSubscriberAction += GetSubscriber;
     }
 
-    void UploadNewVideo()
+    private void OnDisable()
+    {
+        FindObjectOfType<UIManager>().UploadNewVideoAction -= UploadNewVideo;
+        FindObjectOfType<UIManager>().GetNewSubscriberAction -= GetSubscriber;
+    }
+
+    private void UploadNewVideo()
     {
         if (newVideoAmountAchievement.unlocked)
             return;
 
         _videoAmount += 10;
+
         if (_videoAmount >= 100)
             PopNewAchievement(newVideoAmountAchievement);
     }
 
-    void GetSubscriber()
+    private void GetSubscriber()
     {
         if (subscriberAmountAchievement.unlocked)
             return;
@@ -40,7 +49,7 @@ public class AchievementSystem : MonoBehaviour
             PopNewAchievement(subscriberAmountAchievement);
     }
 
-    void PopNewAchievement(Achievement achieve)
+    private void PopNewAchievement(Achievement achieve)
     {
         achievementNameText.text = achieve.achievementName;
         achievementDescriptionText.text = achieve.achievementDescription;
@@ -50,15 +59,15 @@ public class AchievementSystem : MonoBehaviour
         StartCoroutine(PopThePanel());
     }
 
-    IEnumerator PopThePanel()
+    private IEnumerator PopThePanel()
     {
         float percent = 0;
-        float amount = 165f;
+        const float amount = 165f;
 
-        while(percent < 1)
+        while (percent < 1)
         {
             percent += Time.deltaTime / 1f;
-            achievementPanel.position += Vector3.down * amount * Time.deltaTime / 1f;
+            achievementPanel.position += Vector3.down * (amount * Time.deltaTime) / 1f;
 
             yield return null;
         }
@@ -66,17 +75,18 @@ public class AchievementSystem : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         percent = 0;
+        
         while (percent < 1)
         {
             percent += Time.deltaTime / 1f;
-            achievementPanel.position += Vector3.up * amount * Time.deltaTime / 1f;
+            achievementPanel.position += Vector3.up * (amount * Time.deltaTime) / 1f;
 
             yield return null;
         }
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class Achievement
 {
     public string achievementName;
